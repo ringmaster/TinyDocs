@@ -1,3 +1,7 @@
+var resizeContents = function() {
+	$('#contents').height($(window).height() - $('#masthead').height() - $('#tools').height());
+}
+
 $(function(){
 
 	$('#contents').on('click', 'a', function(ev){
@@ -17,9 +21,12 @@ $(function(){
 		$li.toggleClass('active');
 		$href = $a.attr('href');
 		if($href[0] == '/') {
-			$('#page_content').load($href + ' #page_content > *');
+			$.getJSON($href, function(data){
+				$('#page_content').html(data.page);
+			});
 		}
 		ev.preventDefault();
 	});
 
+	$(window).resize(resizeContents);
 });

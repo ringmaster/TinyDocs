@@ -2,6 +2,8 @@
 
 namespace Microsite;
 
+use Microsite\Renderers\JSONRenderer;
+
 include 'microsite.phar';
 
 $app = new App();
@@ -21,11 +23,19 @@ $app->route('home', '/', function(Response $response) {
 	return $response->render('home.php');
 });
 
-$app->route('page', '/page/:page', function(Response $response, Request $request) {
+$generate_page = function(Response $response, Request $request, App $app) {
 	$response['project'] = 'TinyDocs';
 	$response['page'] = $response->render($request['page'] . '.php');
+};
+
+$app->route('page', '/page/:page', $generate_page, function(Response $response) {
 	return $response->render('home.php');
-});
+})->type('text/html');
+
+$app->route('page_json', '/page/:page', $generate_page, function(Response $response, App $app) {
+	$response->set_renderer(JSONRenderer::create('', $app));
+	return $response->render();
+})->type('application/json');
 
 
 /**

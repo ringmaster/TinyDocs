@@ -66,7 +66,26 @@
 						</li>
 					</ol>
 				</li>
-
+				<li class="unit">Developer Documentation</li>
+				<li class="chapter">
+					<a href="#">Expanding TinyDocs</a>
+					<ol>
+						<li class="section">
+							<a href="#">Source Comment Integration</a>
+							<ol>
+								<li><a href="#">Doxygen</a></li>
+								<li><a href="#">PHPDocumentor</a></li>
+							</ol>
+						</li>
+						<li class="section">
+							<a href="#">Creating Extensions</a>
+							<ol>
+								<li><a href="#">Adding Filters</a></li>
+								<li><a href="#">Adding Actions</a></li>
+							</ol>
+						</li>
+					</ol>
+				</li>
 			</ol>
 		</div>
 	</nav>
