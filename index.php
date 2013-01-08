@@ -3,6 +3,7 @@
 namespace Microsite;
 
 use Microsite\Renderers\JSONRenderer;
+use Microsite\Renderers\MarkdownRenderer;
 
 include 'microsite.phar';
 
@@ -17,15 +18,17 @@ $app->template_dirs = [
  * Basic home page.
  * Set the view to a home.php view provided in the view directory
  */
-$app->route('home', '/', function(Response $response) {
+$app->route('home', '/', function(Response $response, App $app) {
 	$response['project'] = 'TinyDocs';
-	$response['page'] = $response->render('default.php');
+	$page_renderer = MarkdownRenderer::create($app->template_dirs(), $app);
+	$response['page'] = $page_renderer->render('default.md');
 	return $response->render('home.php');
 });
 
 $generate_page = function(Response $response, Request $request, App $app) {
 	$response['project'] = 'TinyDocs';
-	$response['page'] = $response->render($request['page'] . '.php');
+	$page_renderer = MarkdownRenderer::create($app->template_dirs(), $app);
+	$response['page'] = $page_renderer->render($request['page'] . '.md');
 };
 
 $app->route('page', '/page/:page', $generate_page, function(Response $response) {
