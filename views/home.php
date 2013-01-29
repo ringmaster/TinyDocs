@@ -4,7 +4,8 @@
 	<meta charset="UTF-8">
 	<title><?= $project ?> - TinyDocs</title>
 	<link rel="stylesheet" href="http://necolas.github.com/normalize.css/2.0.1/normalize.css" type="text/css" media="screen">
-	<link href="//fonts.googleapis.com/css?family=Duru+Sans" rel="stylesheet" type="text/css">
+	<!-- link href="//fonts.googleapis.com/css?family=Duru+Sans" rel="stylesheet" type="text/css" -->
+	<link href='//fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700' rel='stylesheet' type='text/css'>
 	<link href="/css/ss-standard/ss-standard.css" rel="stylesheet" type="text/css">
 	<link rel="stylesheet" href="/css/master.css" type="text/css" media="screen">
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js" type="text/javascript"></script>
@@ -90,19 +91,22 @@
 		</div>
 	</nav>
 	<div id="content">
-		<div id="page">
 
-			<div id="prev_page"></div>
+		<div id="prev_page"></div>
 
-			<div id="page_content">
+		<div id="page_content">
+			<a class="editlink ss-write" href="<?= $editlink ?>"></a>
+			<div id="editable">
+				<h1><?= $title ?></h1>
 				<?= $page ?>
 			</div>
-
-			<div id="next_page"></div>
 		</div>
+
 		<div id="comments">
-
 		</div>
+
+		<div id="next_page"></div>
+
 	</div>
 </div>
 

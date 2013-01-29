@@ -21,10 +21,22 @@ $(function(){
 		$li.toggleClass('active');
 		$href = $a.attr('href');
 		if($href[0] == '/') {
-			$.getJSON($href, function(data){
-				$('#page_content').html(data.page);
-			});
+			$('#page_content').load($href + ' #page_content > *');
 		}
+		ev.preventDefault();
+	});
+
+	$('body').on('click', '.editlink', function(ev){
+		$loading = $('<div class="loading">loading...</div>');
+		$loading
+			.width($('#editable').width())
+			.height($('#editable').height());
+
+		$('#editable')
+			.html('')
+			.append($loading)
+			.load($(this).attr('href'))
+
 		ev.preventDefault();
 	});
 

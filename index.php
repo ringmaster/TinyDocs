@@ -4,6 +4,7 @@ namespace Microsite;
 
 use Microsite\Renderers\JSONRenderer;
 use Microsite\Renderers\MarkdownRenderer;
+use Microsite\Renderers\PlainRenderer;
 
 include 'microsite.phar';
 
@@ -18,28 +19,40 @@ $app->template_dirs = [
  * Basic home page.
  * Set the view to a home.php view provided in the view directory
  */
-$app->route('home', '/', function(Response $response, App $app) {
-	$response['project'] = 'TinyDocs';
-	$page_renderer = MarkdownRenderer::create($app->template_dirs(), $app);
-	$response['page'] = $page_renderer->render('default.md');
-	return $response->render('home.php');
-});
-
 $generate_page = function(Response $response, Request $request, App $app) {
 	$response['project'] = 'TinyDocs';
 	$page_renderer = MarkdownRenderer::create($app->template_dirs(), $app);
 	$response['page'] = $page_renderer->render($request['page'] . '.md');
+	$response['editlink'] = $app->get_url('page_edit', $request);
+	return $response->render('home.php');
 };
 
-$app->route('page', '/page/:page', $generate_page, function(Response $response) {
-	return $response->render('home.php');
-})->type('text/html');
+$app->route(
+	'home',
+	'/',
+	function(Request $request) {
+		$request['page'] = 'default';
+	},
+	$generate_page
+);
 
-$app->route('page_json', '/page/:page', $generate_page, function(Response $response, App $app) {
-	$response->set_renderer(JSONRenderer::create('', $app));
-	return $response->render();
-})->type('application/json');
+$app->route(
+	'page',
+	'/page/:page',
+	$generate_page
+)->type('text/html');
 
+$app->route(
+	'page_edit',
+	'/page/:page/edit',
+	function(Response $response, Request $request, App $app) {
+		$response['project'] = 'TinyDocs';
+		$page_renderer = PlainRenderer::create($app->template_dirs(), $app);
+		$response['page'] = $page_renderer->render($request['page'] . '.md');
+		$response['editlink'] = $app->get_url('page_edit', $request);
+		return $response->render('edit.page.php');
+	}
+);
 
 /**
  * Run the app to match and dispatch routes

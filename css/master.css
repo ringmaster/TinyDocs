@@ -5,7 +5,7 @@ body {
 }
 
 html, body {
-	font-family: "Duru Sans","Lucida Grande",Verdana,Helvetica,sans;
+	font-family: "Open Sans","Duru Sans","Lucida Grande",Verdana,Helvetica,sans;
 	font-weight: 400;
 	font-size: 12px;
 	color: #7a7a7a;
@@ -173,6 +173,21 @@ html, body {
 	background: white;
 }
 
+.editlink {
+	float: right;
+	color: #7a7a7a;
+	text-decoration: none;
+}
+.editlink:hover {
+	color: #08A4C9;
+}
+
+.loading {
+	text-align: center;
+	display: table-cell;
+	vertical-align: middle;
+}
+
 #next_page {
 	height: 50px;
 	border-left: 1px solid #e3e3e3;
@@ -180,4 +195,42 @@ html, body {
 	border-top: 1px solid #e3e3e3;
 	box-shadow: 0px 15px 5px #fff;
 	background: white;
+}
+
+#title {
+	width: 100%;
+	margin-bottom: 20px;
+	font-size: 1.6em;
+	height: 1.6em;
+}
+#page {
+	width: 100%;
+	min-height:300px;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+textarea {
+	position: relative;
+	z-index: 2;
+	height: 23px;
+	border: 1px solid #ccc;
+	margin: 0;
+	padding: 1px 2px;
+	background-color: white;
+	color: #333;
+	border-radius: 1px;
+	box-shadow: 0 1px 2px rgba(0,0,0,0.2) inset;
+	-webkit-transition: border .3s ease-in;
+	-moz-transition: border .3s ease-in;
+	-ms-transition: border .3s ease-in;
+	-o-transition: border .3s ease-in;
+	transition: border .3s ease-in;
+}
+input:focus,
+textarea:focus {
+	outline: 0;
+	border-color: #5ca9e4;
+	box-shadow: 0 0 0 2px rgba(70,161,231,0.3),0 1px 2px rgba(0,0,0,0.2) inset;
 }
