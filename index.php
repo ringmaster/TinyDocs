@@ -15,6 +15,11 @@ $app->template_dirs = [
 	__DIR__ . '/views',
 ];
 
+$app->share('db', function() {
+	$db = new DB('sqlite:' . __DIR__ . '/tinydocs.db');
+	return $db;
+});
+
 /**
  * Basic home page.
  * Set the view to a home.php view provided in the view directory
