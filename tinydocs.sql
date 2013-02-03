@@ -1,8 +1,7 @@
 CREATE TABLE pages (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   slug varchar(255),
-  mptt_left integer,
-  mptt_right integer,
+  sort_order integer,
   title integer,
   chapter_type integer,
   unique(slug)
