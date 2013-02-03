@@ -6,12 +6,13 @@ CREATE TABLE pages (
   chapter_type integer,
   unique(slug)
 );
-CREATE TABLE revisions (
-  id integer primary key autoincrement,
-  page_id integer,
-  rev integer not null,
-  rev_title varchar(255),
-  rev_slug varchar(255),
-  content text,
-  user_id integer
+CREATE TABLE revisions
+(
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	page_id INTEGER,
+	rev INTEGER NOT NULL,
+	rev_title TEXT,
+	rev_slug TEXT,
+	content TEXT,
+	user_id INTEGER
 );
