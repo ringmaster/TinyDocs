@@ -35,7 +35,7 @@ $(function(){
 		$('#editable')
 			.html('')
 			.append($loading)
-			.load($(this).attr('href'))
+			.load($(this).attr('href'));
 
 		ev.preventDefault();
 	});
