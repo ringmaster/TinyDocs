@@ -17,6 +17,16 @@ class TinyDocsApp extends App
 		$args = func_get_args();
 		return $this->dispatch_object('db', $args);
 	}
+
+	function get_page($page_name) {
+		$page = $this->db()->row('SELECT * FROM pages WHERE slug = :slug', ['slug' => $page_name]);
+		$rev = $this->db()->row('SELECT * FROM revisions WHERE page_id = :page_id AND rev = (SELECT MAX(rev) FROM revisions WHERE page_id = :page_id);', ['page_id' => $page['id']]);
+		if($rev != false) {
+			$page = array_merge($page->ary(), $rev->ary());
+		}
+		return $page;
+	}
+
 }
 
 $app = new TinyDocsApp();
@@ -39,13 +49,16 @@ $generate_page = function(Response $response, Request $request, TinyDocsApp $app
 	$response['project'] = 'TinyDocs';
 	$page_renderer = MarkdownRenderer::create($app->template_dirs(), $app);
 
-	$page = $app->db()->row('SELECT * FROM pages WHERE slug = :slug', ['slug' => $request['page']]);
-	$rev = $app->db()->row('SELECT * FROM revisions WHERE page_id = :page_id AND rev = (SELECT MAX(rev) FROM revisions WHERE page_id = :page_id);', ['page_id' => $page['id']]);
-	$page = array_merge($page->ary(), $rev->ary());
+	$page = $app->get_page($request['page']);
 
 	$response['title'] = $page['title'];
 	$response['page'] = $page_renderer->render($page['content']);
 	$response['editlink'] = $app->get_url('page_edit', $request);
+	$pages = $app->db()->results('SELECT * FROM pages ORDER BY sort_order;');
+	foreach($pages as &$page) {
+		$page['url'] = $app->get_url('page', ['page'=>$page['slug']]);
+	}
+	$response['pages'] = $pages;
 	return $response->render('home.php');
 };
 
@@ -71,7 +84,11 @@ $app->route(
 	function(Response $response, Request $request, App $app) {
 		$response['project'] = 'TinyDocs';
 		$page_renderer = PlainRenderer::create($app->template_dirs(), $app);
-		$response['page'] = $page_renderer->render($request['page'] . '.md');
+
+		$page = $app->get_page($request['page']);
+
+		$response['page'] = $page['content'];
+		$response['title'] = $page['title'];
 		$response['editlink'] = $app->get_url('page_edit', $request);
 		return $response->render('edit.page.php');
 	}

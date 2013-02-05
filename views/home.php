@@ -23,70 +23,49 @@
 		</div>
 		<nav id="contents">
 			<ol>
-				<li class="chapter active">
-					<a href="#">Introducing TinyDocs</a>
-					<ol>
-						<li class="section active">
-							<a href="/page/default">What is TinyDocs?</a>
-						</li>
-					</ol>
-				</li>
-				<li class="unit">User Documentation</li>
-				<li class="chapter">
-					<a href="#">Installing TinyDocs</a>
-					<ol>
-						<li class="section">
-							<a href="#">Installation</a>
-							<ol>
-								<li><a href="#">Prerequisites</a></li>
-								<li><a href="#">Obtaining TinyDocs</a></li>
-								<li><a href="#">Configuration</a></li>
-							</ol>
-						</li>
-					</ol>
-				</li>
-				<li class="chapter">
-					<a href="#">Using TinyDocs</a>
-					<ol>
-						<li class="section">
-							<a href="/page/creating-pages">Creating Pages</a>
-							<ol>
-								<li><a href="/page/creating-pages#enabling-comments">Enabling Comments</a></li>
-								<li><a href="/page/creating-pages#setting-permissions">Setting Permissions</a></li>
-							</ol>
-						</li>
-						<li class="section">
-							<a href="#">Editing Pages</a>
-						</li>
-						<li class="section">
-							<a href="#">Comment Contributions</a>
-							<ol>
-								<li><a href="#">Up/Down-Voting</a></li>
-								<li><a href="#">Promoting Comments</a></li>
-							</ol>
-						</li>
-					</ol>
-				</li>
-				<li class="unit">Developer Documentation</li>
-				<li class="chapter">
-					<a href="#">Expanding TinyDocs</a>
-					<ol>
-						<li class="section">
-							<a href="#">Source Comment Integration</a>
-							<ol>
-								<li><a href="#">Doxygen</a></li>
-								<li><a href="#">PHPDocumentor</a></li>
-							</ol>
-						</li>
-						<li class="section">
-							<a href="#">Creating Extensions</a>
-							<ol>
-								<li><a href="#">Adding Filters</a></li>
-								<li><a href="#">Adding Actions</a></li>
-							</ol>
-						</li>
-					</ol>
-				</li>
+				<?php
+				$doc = new DOMDocument();
+				foreach($pages as $page_link) {
+					switch($page_link['chapter_type']) {
+						case 'chapter':
+							$current_chapter_li = $doc->createElement('li');
+							$current_chapter_li->setAttribute('class', 'chapter');
+							$doc->appendChild($current_chapter_li);
+							$a = $doc->createElement('a');
+							$a->setAttribute('href', '#' . $page_link['slug']);
+							$a->appendChild(new DOMText($page_link['title']));
+							$current_chapter_li->appendChild($a);
+							$current_chapter = $doc->createElement('ol');
+							$current_chapter_li->appendChild($current_chapter);
+							break;
+						case 'unit':
+							$unit = $doc->createElement('li');
+							$unit->setAttribute('class', 'unit');
+							$unit->appendChild(new DOMText($page_link['title']));
+							$doc->appendChild($unit);
+							break;
+						case 'page':
+							$current_page_li = $doc->createElement('li');
+							$current_page_li->setAttribute('class', 'section');
+							$current_chapter->appendChild($current_page_li);
+							$a = $doc->createElement('a');
+							$a->setAttribute('href', $page_link['url']);
+							$a->appendChild(new DOMText($page_link['title']));
+							$current_page_li->appendChild($a);
+							$current_page = $doc->createElement('ol');
+							$current_page_li->appendChild($current_page);
+							break;
+						case 'section':
+							$section_li = $doc->createElement('li');
+							$current_page->appendChild($section_li);
+							$section = $doc->createElement('a');
+							$section->setAttribute('href', $page_link['url']);
+							$section->appendChild(new DOMText($page_link['title']));
+							break;
+					}
+				}
+				echo $doc->saveHTML();
+				?>
 			</ol>
 		</div>
 	</nav>
