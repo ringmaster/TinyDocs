@@ -71,7 +71,7 @@
 	</nav>
 	<div id="content">
 
-		<div id="prev_page"></div>
+		<div id="prev_page" class="pager"><a href="<?= $prev_page['url'] ?>"><?= $prev_page['title'] ?></a></div>
 
 		<div id="page_content">
 			<a class="editlink ss-write" href="<?= $editlink ?>"></a>
@@ -84,7 +84,7 @@
 		<div id="comments">
 		</div>
 
-		<div id="next_page"></div>
+		<div id="next_page" class="pager"><a href="<?= $next_page['url'] ?>"><?= $next_page['title'] ?></a></div>
 
 	</div>
 </div>

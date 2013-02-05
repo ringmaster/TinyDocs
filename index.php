@@ -19,11 +19,17 @@ class TinyDocsApp extends App
 	}
 
 	function get_page($page_name) {
-		$page = $this->db()->row('SELECT * FROM pages WHERE slug = :slug', ['slug' => $page_name]);
+		if(is_integer($page_name)) {
+			$page = $this->db()->row('SELECT * FROM pages WHERE id = :id', ['id' => $page_name]);
+		}
+		else {
+			$page = $this->db()->row('SELECT * FROM pages WHERE slug = :slug', ['slug' => $page_name]);
+		}
 		$rev = $this->db()->row('SELECT * FROM revisions WHERE page_id = :page_id AND rev = (SELECT MAX(rev) FROM revisions WHERE page_id = :page_id);', ['page_id' => $page['id']]);
 		if($rev != false) {
 			$page = array_merge($page->ary(), $rev->ary());
 		}
+		$page['url'] = $this->get_url('page', ['page' => $page['slug']]);
 		return $page;
 	}
 
@@ -50,6 +56,9 @@ $generate_page = function(Response $response, Request $request, TinyDocsApp $app
 	$page_renderer = MarkdownRenderer::create($app->template_dirs(), $app);
 
 	$page = $app->get_page($request['page']);
+
+	$response['prev_page'] = $app->get_page((int)$app->db()->val('SELECT id FROM pages WHERE sort_order < :sort_order AND chapter_type="page" ORDER BY sort_order DESC LIMIT 1', ['sort_order' => $page['sort_order']]));
+	$response['next_page'] = $app->get_page((int)$app->db()->val('SELECT id FROM pages WHERE sort_order > :sort_order AND chapter_type="page" ORDER BY sort_order ASC LIMIT 1', ['sort_order' => $page['sort_order']]));
 
 	$response['title'] = $page['title'];
 	$response['page'] = $page_renderer->render($page['content']);

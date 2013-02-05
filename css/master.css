@@ -155,7 +155,6 @@ html, body {
 }
 
 #prev_page {
-	height: 50px;
 	border-left: 1px solid #e3e3e3;
 	border-right: 1px solid #e3e3e3;
 	border-bottom: 1px solid #e3e3e3;
@@ -171,6 +170,21 @@ html, body {
 	padding: 20px;
 	margin: 20px 0px;
 	background: white;
+}
+
+.pager {
+	display: table;
+	height: 50px;
+	width: 100%;
+}
+
+.pager a {
+	display: table-cell;
+	text-align: left;
+	vertical-align: middle;
+	text-decoration: none;
+	padding: 0px 20px;
+	box-sizing: border-box;
 }
 
 .editlink {
@@ -189,7 +203,6 @@ html, body {
 }
 
 #next_page {
-	height: 50px;
 	border-left: 1px solid #e3e3e3;
 	border-right: 1px solid #e3e3e3;
 	border-top: 1px solid #e3e3e3;
