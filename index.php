@@ -28,6 +28,8 @@ class TinyDocsApp extends App
 		$rev = $this->db()->row('SELECT * FROM revisions WHERE page_id = :page_id AND rev = (SELECT MAX(rev) FROM revisions WHERE page_id = :page_id);', ['page_id' => $page['id']]);
 		if($rev != false) {
 			$page = array_merge($page->ary(), $rev->ary());
+			$page['rev_id'] = $page['id'];
+			$page['id'] = $page['page_id'];
 		}
 		$page['url'] = $this->get_url('page', ['page' => $page['slug']]);
 		return $page;
