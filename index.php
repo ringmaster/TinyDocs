@@ -33,6 +33,10 @@ class TinyDocsApp extends App
 		return $page;
 	}
 
+	function slug($text) {
+		return strtolower(preg_replace('#[^a-z0-9_\-]+#i', '', $text));
+	}
+
 }
 
 $app = new TinyDocsApp();
@@ -62,7 +66,7 @@ $generate_page = function(Response $response, Request $request, TinyDocsApp $app
 
 	$response['title'] = $page['title'];
 	$response['page'] = $page_renderer->render($page['content']);
-	$response['editlink'] = $app->get_url('page_edit', $request);
+	$response['edit_url'] = $app->get_url('page_edit', $request);
 	$pages = $app->db()->results('SELECT * FROM pages ORDER BY sort_order;');
 	foreach($pages as &$page) {
 		$page['url'] = $app->get_url('page', ['page'=>$page['slug']]);
@@ -79,13 +83,13 @@ $app->route(
 		$request['page'] = $first_page;
 	},
 	$generate_page
-);
+)->get();
 
 $app->route(
 	'page',
 	'/page/:page',
 	$generate_page
-)->type('text/html');
+)->type('text/html')->get();
 
 $app->route(
 	'page_edit',
@@ -96,12 +100,49 @@ $app->route(
 
 		$page = $app->get_page($request['page']);
 
-		$response['page'] = $page['content'];
+		$response['content'] = $page['content'];
 		$response['title'] = $page['title'];
-		$response['editlink'] = $app->get_url('page_edit', $request);
+		$response['edit_url'] = $app->get_url('page_edit', $request);
+		$response['post_url'] = $app->get_url('page_post', $request);
 		return $response->render('edit.page.php');
 	}
-);
+)->get();
+
+$app->route(
+	'page_post',
+	'/page/:page/post',
+	function(Response $response, Request $request, TinyDocsApp $app) {
+		$page = $app->get_page($request['page']);
+
+		if($page['content'] != $_POST['content'] || $page['title'] != $_POST['title']) {
+
+			$newrev = isset($page['rev']) ? intval($page['rev']) + 1 : 1;
+
+			$app->db()->query(
+				'INSERT INTO revisions (page_id, rev, rev_title, rev_slug, content, user_id) VALUES (:page_id, :rev, :rev_title, :rev_slug, :content, :user_id);',
+				[
+					'page_id' => $page['id'],
+					'rev' => $newrev,
+					'rev_title' => $_POST['title'],
+					'rev_slug' => $app->slug($_POST['title']),
+					'content' => $_POST['content'],
+					'user_id' => 1,
+				]
+			);
+
+			$app->db()->query(
+				'UPDATE pages SET slug = :slug, title = :title WHERE id = :id',
+				[
+					'slug' => $app->slug($_POST['title']),
+					'title' => $_POST['title'],
+					'id' => $page['id'],
+				]
+			);
+		}
+
+		$response->redirect($app->get_url('page', $request));
+	}
+)->post();
 
 /**
  * Run the app to match and dispatch routes

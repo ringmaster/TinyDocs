@@ -74,7 +74,7 @@
 		<div id="prev_page" class="pager"><a href="<?= $prev_page['url'] ?>"><?= $prev_page['title'] ?></a></div>
 
 		<div id="page_content">
-			<a class="editlink ss-write" href="<?= $editlink ?>"></a>
+			<a class="editlink ss-write" href="<?= $edit_url ?>"></a>
 			<div id="editable">
 				<h1><?= $title ?></h1>
 				<?= $page ?>
