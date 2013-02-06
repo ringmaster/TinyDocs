@@ -36,7 +36,7 @@ class TinyDocsApp extends App
 	}
 
 	function slug($text) {
-		return strtolower(preg_replace('#[^a-z0-9_\-]+#i', '', $text));
+		return strtolower(preg_replace('#[^a-z0-9_\-]+#i', '-', $text));
 	}
 
 }
