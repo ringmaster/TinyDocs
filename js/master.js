@@ -4,21 +4,18 @@ var resizeContents = function() {
 
 $(function(){
 
-	$('#contents').on('click', 'a', function(ev){
+	$('#contents').on('click', '.chapter > a', function(ev){
+		$('.chapter').not(this).removeClass('active');
+		$(this).closest('.chapter').toggleClass('active');
+	});
+
+
+	$('#contents').on('click', '.section a', function(ev){
 		var $a = $(this);
-		var $li = $a.closest('li.section,li.chapter');
-		var is_section = $li.hasClass('section');
-		var is_chapter = $li.hasClass('chapter');
-		if(!$li.hasClass('active')) {
-			if(is_section) {
-				$('#contents li.section.active').removeClass('active');
-			}
-			if(is_chapter) {
-				$('#contents li.chapter.active').removeClass('active');
-			}
-		}
-		console.log($li[0]);
-		$li.toggleClass('active');
+		var $section = $a.closest('li.section');
+		$('.section').not($section).removeClass('active');
+		$section.addClass('active');
+
 		$href = $a.attr('href');
 		if($href[0] == '/') {
 			$('#page_content').load($href + ' #page_content > *');
